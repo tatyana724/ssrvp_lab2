@@ -1,16 +1,17 @@
-import React from 'react';
-import { List, ListItem, ListItemText } from '@mui/material';
+import { Link } from 'react-router-dom';
 
-const Menu = ({ labs, onSelectLab }) => {
+function Menu({ labs }) {
   return (
-    <List>
-      {labs.map((lab, index) => (
-        <ListItem button key={index} onClick={() => onSelectLab(lab)}>
-          <ListItemText primary={lab.title} />
-        </ListItem>
-      ))}
-    </List>
+    <nav>
+      <ul>
+        {labs.map(lab => (
+          <li key={lab.title}>
+            <Link to={`/${lab.title}`}>{lab.title}</Link>
+          </li>
+        ))}
+      </ul>
+    </nav>
   );
-};
+}
 
 export default Menu;
