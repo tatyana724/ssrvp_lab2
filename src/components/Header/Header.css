@@ -1,0 +1,143 @@
+.header {
+    width: 100%;
+    padding: 1rem 0;
+    background-color: var(--header-bg);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.nav-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    flex-grow: 1;
+}
+
+.nav-item {
+    color: var(--text-color);
+    text-decoration: none;
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+    .nav-item:hover {
+        background-color: var(--hover-bg);
+        color: var(--hover-text);
+    }
+
+.theme-toggle {
+    /* Специфичные стили для кнопки темы если нужно */
+}
+
+.menu-btn {
+    /* Специфичные стили для кнопки меню если нужно */
+}
+
+.user-controls {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.user-greeting, .admin-link, .logout-btn {
+    color: var(--link-color);
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.logout-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-color);
+}
+
+    .user-greeting:hover, .admin-link:hover, .logout-btn:hover {
+        background-color: var(--hover-bg);
+        color: var(--hover-text);
+    }
+
+/* Добавьте эти переменные в ваши темы */
+.light {
+    --hover-bg: #e9ecef;
+    --hover-text: #0056b3;
+    /* остальные переменные светлой темы */
+}
+
+.dark {
+    --hover-bg: #495057;
+    --hover-text: #91b7ff;
+    /* остальные переменные темной темы */
+}
+/* Существующие стили остаются без изменений */
+
+.menu-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: var(--header-bg);
+    padding: 1rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
+.labs-list, .lab-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.lab-link {
+    background: none;
+    border: none;
+    color: var(--link-color);
+    cursor: pointer;
+    padding: 0.5rem;
+    text-align: left;
+    font-size: 1rem;
+}
+
+    .lab-link:hover {
+        text-decoration: underline;
+    }
+
+.back-button {
+    background: none;
+    border: none;
+    color: var(--link-color);
+    cursor: pointer;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+}
+
+    .back-button:hover {
+        text-decoration: underline;
+    }
+
+.lab-content ul {
+    margin-left: 1rem;
+    list-style-type: disc;
+}
+
+.lab-content li {
+    margin-bottom: 0.5rem;
+}

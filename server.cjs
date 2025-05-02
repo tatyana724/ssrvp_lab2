@@ -2,93 +2,108 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 
+const PORT = 3000;
+
 const app = express();
-
-// Настройка CORS (один раз)
-app.use(cors({
-  origin: 'http://localhost:5173', // или ваш клиентский URL
-  credentials: true
-}));
-
 app.use(bodyParser.json());
-
-// Mock database
-let users = [
-  { id: 1, username: 'admin', email: 'admin@example.com', password: 'admin123' }
-];
+app.use(express.json());
+app.use(cors());
 
 let feedbacks = [
-  { id: 1, text: 'Первый отзыв', userId: 1 },
-  { id: 2, text: 'Второй отзыв', userId: 1 }
+  {answer: "funny", mark: 4 },
 ];
 
-// Auth endpoints
-app.post('/api/auth', (req, res) => {
-  const { email, password } = req.body;
-  const user = users.find(u => u.email === email && u.password === password);
-  
-  if (user) {
-    console.log('User found:', user);
-    res.json({ 
-      success: true, 
-      user: { 
-        id: user.id, 
-        username: user.username, 
-        email: user.email 
-      } 
-    });
+let users = [
+  { id: 1, login: "admin", password: "admin", email: "admin@gmail.com" },
+];
+
+app.get("/feedbacks", (req, res) => {
+  console.log("!FEEDBACK LIST!");
+  const items = JSON.stringify(feedbacks);
+  res.send(items);
+});
+
+app.get("/users", (req, res) => {
+  const items = JSON.stringify(users);
+  res.send(items);
+});
+
+app.post("/feedbacks", (req, res) => {
+  let maxId = 0;
+  if (feedbacks.length > 0) {
+    maxId = feedbacks[feedbacks.length - 1]["id"];
+  }
+  const newItem = {
+    id: maxId + 1,
+    author: req.body.author,
+    answer: req.body.answer,
+    mark: req.body.mark,
+  };
+  feedbacks.push(newItem);
+});
+
+app.delete("/feedbacks/:id", (req, res) => {
+  console.log(req.params);
+  feedbacks = feedbacks.filter((el) => {
+    return el.id != parseInt(req.params.id);
+  });
+
+  res.send(feedbacks);
+});
+
+app.delete("/users/:id", (req, res) => {
+  console.log(req.params);
+  users = users.filter((el) => {
+    return el.id != parseInt(req.params.id);
+  });
+
+  res.send(users);
+});
+
+app.post("/register", (req, res) => {
+  const user = users.find((el) => el.login == req.body.username);
+
+  if (!user) {
+    const newUser = {
+      id: users.length + 1,
+      login: req.body.username,
+      password: req.body.password,
+      email: req.body.email,
+    };
+    users.push(newUser);
+    res.sendStatus(200);
   } else {
-    console.log('Auth failed for:', email);
-    res.status(401).json({ 
-      success: false, 
-      message: 'Invalid credentials' 
-    });
+    res.sendStatus(409);
   }
 });
 
-// Registration endpoint
-app.post('/api/register', (req, res) => {
-  const { username, email, password } = req.body;
-  const id = users.length + 1;
-  const newUser = { id, username, email, password };
-  users.push(newUser);
-  res.json({ success: true, user: { id, username, email } });
+app.get("/login/:username", (req, res) => {
+  // подразумевается, что логины у всех разные
+  const currentUser = users.find((el) => el.login == req.params.username);
+  if (currentUser) {
+    res.send(JSON.stringify(currentUser[0]));
+    res.sendStatus(200);
+  } else res.sendStatus(409);
+  console.log(currentUser);
 });
 
-// User profile endpoints
-app.put('/api/users/:id', (req, res) => {
-  const { id } = req.params;
-  const { username, email } = req.body;
-  const userIndex = users.findIndex(u => u.id === parseInt(id));
-  
-  if (userIndex !== -1) {
-    users[userIndex] = { ...users[userIndex], username, email };
-    res.json({ success: true, user: users[userIndex] });
-  } else {
-    res.status(404).json({ success: false, message: 'User not found' });
-  }
+app.get("/profile/:username", (req, res) => {
+  1;
+  const currentUser = users.find((el) => el.login == req.params.username);
+  res.send(JSON.stringify(currentUser));
 });
 
-// Feedback endpoints
-app.get('/api/feedback', (req, res) => {
-  res.json(feedbacks);
+app.put("/profile", (req, res) => {
+  const currentUser = users.find((el) => {
+    if (el.id == req.body.id) {
+      (el.login = req.body.username),
+        (el.password = req.body.password),
+        (el.email = req.body.email);
+      res.sendStatus(200);
+    }
+  });
 });
 
-app.post('/api/feedback', (req, res) => {
-  const { text, userId } = req.body;
-  const id = feedbacks.length + 1;
-  const newFeedback = { id, text, userId };
-  feedbacks.push(newFeedback);
-  res.json({ success: true, feedback: newFeedback });
-});
-
-app.delete('/api/feedback/:id', (req, res) => {
-  const { id } = req.params;
-  feedbacks = feedbacks.filter(f => f.id !== parseInt(id));
-  res.json({ success: true });
-});
-
-const PORT = 3000;
 app.listen(PORT, () => {
-  console.log("Server running on port "${PORT});
+  console.log(`Server is running on http://localhost:${PORT}`);
 });
